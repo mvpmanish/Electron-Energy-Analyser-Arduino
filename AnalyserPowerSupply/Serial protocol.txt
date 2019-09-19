@@ -1,0 +1,15 @@
+Serial protocol for James' power supply
+
+To ID the device (to find the correct serial port)
+
+<n><S||G><V><x><x>....<\n>
+
+where:
+n is the analyser number which can be 1 or 2
+S||G is for SET or GET
+V is for voltage
+
+Example:
+1SVLE1234\n : Set analyser 1's lens voltage to 1234 DAC points. In this case, that is 1234 mV.
+ID\n        : Get the unit's ID which will return AN\n
+2GVAE       : Get Analyser 2's Voltage on All Elements

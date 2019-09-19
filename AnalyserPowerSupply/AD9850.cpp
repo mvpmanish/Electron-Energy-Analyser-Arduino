@@ -1,4 +1,4 @@
-#include <AD9850.h>
+#include "AD9850.h"
 #define pulse(pin) {digitalWrite(pin, HIGH); digitalWrite(pin, LOW);}
 
 AD9850::AD9850(char w_clk, char fq_ud, char d7)
