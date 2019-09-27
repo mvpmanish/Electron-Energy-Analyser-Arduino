@@ -47,18 +47,11 @@ void Analyser::init(){
 }
 
 void Analyser::setRE(int32_t voltage){
-    VRE = constrainVoltage(voltage);
-    // uint16_t VREcoarse = voltage / fineSteps;
-    // uint16_t VREfine = voltage % fineSteps;
-    // dac[0].setVoltage(0, VREfine);
-    // dac[0].setVoltage(1, VREcoarse);
-    if(n ==1 ){
-        dac[0].setVoltage(0, VRE);
-    }
-    else if(n == 2){
-        dac[0].setVoltage(0, VRE);
-        //dac[0].setVoltage(1, VRE);
-    }
+    VRE = constrainResidualEnergyVoltage(voltage);
+    uint16_t VREcoarse = voltage / fineSteps;
+    uint16_t VREfine = voltage % fineSteps;
+    dac[0].setVoltage(0, VREfine);
+    dac[0].setVoltage(1, VREcoarse);
 }
 
 void Analyser::setLE(int16_t voltage){
@@ -154,8 +147,8 @@ uint16_t Analyser::constrainVoltage(int16_t voltage){
 
 uint32_t Analyser::constrainResidualEnergyVoltage(int32_t voltage){
     // constrain a residual energy voltage within a valid range
-    if(voltage > (4096 * fineSteps - 1)){
-        voltage = 4096 * fineSteps - 1;
+    if(voltage > (4096 * int32_t(fineSteps) - 1)){
+        voltage = 4096 * int32_t(fineSteps) - 1;
     }
     else if(voltage < 0){
         voltage = 0;

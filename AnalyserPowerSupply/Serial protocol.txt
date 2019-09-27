@@ -10,6 +10,7 @@ S||G is for SET or GET
 V is for voltage
 
 Example:
+nSVRE10\n   : Set analyser n's (where n is 1 or 2) residual energy voltage to 10 dac points. That is 10 mV. This then gets scaled by the power supply.
 1SVLE1234\n : Set analyser 1's lens voltage to 1234 DAC points. In this case, that is 1234 mV.
 ID\n        : Get the unit's ID which will return AN\n
 2GVAE       : Get Analyser 2's Voltage on All Elements

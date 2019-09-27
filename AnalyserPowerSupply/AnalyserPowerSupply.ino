@@ -1,12 +1,10 @@
-#include "AD9850.h"
-#include "Encoder.h"
-#include "MilliTimer.h"
-#include "SerialChecker.h"
-#include "MCP4822.h"
-#include "AnalyserClass.h"
+#include "AD9850.h"         // Signal generator for the high voltage supplies
+#include "Encoder.h"        // Handles front panel rotary encoders
+#include "SerialChecker.h"  // Handles serial communications with the controlling PC
+#include "AnalyserClass.h"  // Abstracts away the analysers and handles their DACs
 
 
-
+//// Create instances of the two analyser abstraction objects.
 Analyser Analyser1(1);
 Analyser Analyser2(2);
 
@@ -42,22 +40,21 @@ const uint8_t enc7PinA = 5;
 const uint8_t enc7PinB = 4;
 
 
-
 //// Serial Settings
 SerialChecker sc;  //Defaults the baud rate to 250000
 
 void setup(){
 
+  // Starts the signal generator at 14kHz for the high voltage supplies
+  sigGen.setfreq(freq);
+
+  // Initialises the output voltages on the DACs to zero.
   Analyser1.init();
   Analyser2.init();
-
-  sigGen.setfreq(freq);
   
   // setup serial checker
   sc.init();
-  sc.enableACKNAK();
-  // sc.enableChecksum();
-  
+  sc.enableACKNAK();  
 
   // init encoders
   encs[0].init(enc0PinA, enc0PinB); // A1RE
@@ -86,33 +83,21 @@ void checkEncoders(){
       case NO_CHANGE:
         break;
       case CW_RATE1: 
-        // Serial.print(i);
-        // Serial.println(": CW_RATE1");
         value = rate1;
         break;
       case CW_RATE2:
-        // Serial.print(i);
-        // Serial.println(": CW_RATE2");
         value = rate2;
         break;
-      case CW_RATE3: 
-        // Serial.print(i);
-        // Serial.println(": CW_RATE3");        
+      case CW_RATE3:     
         value = rate3;
         break;
       case ACW_RATE1: 
-        // Serial.print(i);
-        // Serial.println(": ACW_RATE1");
         value = -rate1;
         break;
       case ACW_RATE2: 
-        // Serial.print(i);
-        // Serial.println(": ACW_RATE2");
         value = -rate2;
         break;
       case ACW_RATE3: 
-        // Serial.print(i);
-        // Serial.println(": ACW_RATE3");
         value = -rate3;
         break;
     }
@@ -149,7 +134,7 @@ void checkEncoders(){
 
 void checkSerial(){
   if(sc.check()){
-    Analyser *An;
+    Analyser *An = NULL;
     if(sc.contains("1")){
       An = &Analyser1;
     }
@@ -161,31 +146,44 @@ void checkSerial(){
       // Setting a voltage
       if(sc.contains("RE", 3)){
         // Get residual energy voltage
-        An->setRE(sc.toInt32(5));
+        uint32_t tmp = sc.toInt32(5);
+        
+        An->setRE(tmp);
+        sc.sendACK();
       }
       else if(sc.contains("LE", 3)){
         // Get lens voltage
         An->setLE(sc.toInt16(5));
+        sc.sendACK();
       }
       else if(sc.contains("DX", 3)){
         // Get deflector X
         An->setDX(sc.toInt16(5));
+        sc.sendACK();
       }
       else if(sc.contains("DY", 3)){
         // Get deflector Y
         An->setDY(sc.toInt16(5));
+        sc.sendACK();
       }
       else if(sc.contains("AM", 3)){
         // Get analyser mean
         An->setAM(sc.toInt16(5));
+        sc.sendACK();
       }
       else if(sc.contains("IH", 3)){
         // Get inner hemisphere
         An->setIH(sc.toInt16(5));
+        sc.sendACK();
       }
       else if(sc.contains("OH", 3)){
         // Get outer hemisphere
         An->setOH(sc.toInt16(5));
+        sc.sendACK();
+      }
+      else{
+        // element not valid.
+        sc.sendNAK();
       }
     }
     else if(sc.contains("GV", 1)){
@@ -219,18 +217,35 @@ void checkSerial(){
       }
       else if(sc.contains("AE", 3)){
         // Get all elements' voltages
-        Serial.println(An->getRE());
-        Serial.println(An->getLE());
-        Serial.println(An->getDX());
-        Serial.println(An->getDY());
-        Serial.println(An->getAM());
-        Serial.println(An->getIH());
-        Serial.println(An->getOH());
+        Serial.print("RE"); Serial.print(An->getRE());
+        Serial.print("LE"); Serial.print(An->getLE());
+        Serial.print("DX"); Serial.print(An->getDX());
+        Serial.print("DY"); Serial.print(An->getDY());
+        Serial.print("AM"); Serial.print(An->getAM());
+        Serial.print("IH"); Serial.print(An->getIH());
+        Serial.print("OH"); Serial.println(An->getOH());
+      }
+      else{
+        // element not valid.
+        sc.sendNAK();
       }
     }
     else if(sc.contains("ID")){
       // Get the ID for this device which is AN for Analyser.
       Serial.println("AN");
+    }
+    else if(sc.contains("SC1")){
+      sc.enableChecksum();
+      sc.sendACK();
+    }
+    else if(sc.contains("SC0")){
+      // Send SC0g where g is the checksum
+      sc.disableChecksum();
+      sc.sendACK();
+    }
+    else{
+      // Received message not understood.
+      sc.sendNAK();
     }
   }
 }
