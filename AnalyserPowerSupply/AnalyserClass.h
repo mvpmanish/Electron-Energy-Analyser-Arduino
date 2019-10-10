@@ -14,6 +14,8 @@ public:
   // The following commands are used to set the DAC voltages. All have 4096 levels except RSE which uses 
   // two DACs to provide 4096 * 100 steps for finer control.
   void setRE(int32_t voltage);
+  void setRA(int32_t voltage);
+  void setRB(int32_t voltage);
   void setLE(int16_t voltage);
   void setAM(int16_t voltage);
   void setIH(int16_t voltage);
@@ -32,6 +34,8 @@ public:
 
   // Returns the stored set values.
   uint32_t getRE();
+  uint32_t getRA();
+  uint32_t getRB();
   uint16_t getLE();
   uint16_t getAM();
   uint16_t getIH();
@@ -41,8 +45,8 @@ public:
 private:
   // These constrain the input voltages to valid values.
   uint16_t constrainVoltage(int16_t voltage);
-  uint32_t constrainResidualEnergyVoltage(int32_t voltage);
-  uint8_t n;
+  uint32_t constrainVoltage(int32_t voltage); // overloaded case for the RSE voltage which has more than 2^16 potential steps,
+  uint8_t n;  //Analyser number
   MCP4822 dac[4];
   const uint8_t firstCSPin = 42; // The four DACs' chip select pins start here and run sequentially
   const uint8_t fineSteps = 100; // The number of fine steps for every coarse step on the RSE voltage

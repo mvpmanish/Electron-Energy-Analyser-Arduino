@@ -2,32 +2,23 @@
 #include "MilliTimer.h"
 
 MilliTimer::MilliTimer(){
-  timeOut=1000000;
-  start=millis();
+  timeOut = 1000; // default time out is 1 second
+  start = millis();
 }
 
-MilliTimer::MilliTimer(unsigned long t){
-  timeOut=t;
-  start=millis();
+MilliTimer::MilliTimer(uint32_t t){
+  timeOut = t;
+  start = millis();
 }
 
-void MilliTimer::init(unsigned long t){
-  timeOut=t;
-  start=millis();
+void MilliTimer::init(uint32_t t){
+  timeOut = t;
+  start = millis();
 }
 
-unsigned long MilliTimer::elapsed(){
+uint32_t MilliTimer::elapsed(){
   return millis() - start;
 }
-
-// bool MilliTimer::timedOut(){
-//   if(elapsed() >= timeOut){
-//     return true;
-//   }
-//   else{
-//     return false;
-//   }
-// }
 
 bool MilliTimer::timedOut(bool RESET){
   if(elapsed() >= timeOut){
@@ -43,14 +34,14 @@ bool MilliTimer::timedOutAndReset(){
   return timedOut(true);
 }
 
-void MilliTimer::updateTimeOut(unsigned long t){
-  timeOut=t;
+void MilliTimer::updateTimeOut(uint32_t t){
+  timeOut = t;
 }
 
 void MilliTimer::reset(){
-  start=millis();
+  start = millis();
 }
 
-unsigned long MilliTimer::getTimeOut(){
+uint32_t MilliTimer::getTimeOut(){
   return timeOut;
 }

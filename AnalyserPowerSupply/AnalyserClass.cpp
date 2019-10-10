@@ -44,14 +44,36 @@ void Analyser::init(){
             dac[i].init(firstCSPin + (2 * i) + 1);
         }
     }
+    // set the voltages to their default values (defined in the header)
+    setRE(VRE);
+    setLE(VLE);
+    setDX(VDX);
+    setDY(VDY);
+    setAM(VAM);
+    setIH(VIH);
+    setOH(VOH);
 }
 
 void Analyser::setRE(int32_t voltage){
-    VRE = constrainResidualEnergyVoltage(voltage);
+    VRE = constrainVoltage(voltage);
     uint16_t VREcoarse = voltage / fineSteps;
     uint16_t VREfine = voltage % fineSteps;
+    Serial.println(VREcoarse);
+    Serial.println(VREfine);
     dac[0].setVoltage(0, VREfine);
     dac[0].setVoltage(1, VREcoarse);
+}
+
+void Analyser::setRA(int32_t voltage)
+{
+    uint16_t VRA = constrainVoltage(voltage);
+    dac[0].setVoltage(0, VRA);
+}
+
+void Analyser::setRB(int32_t voltage)
+{
+    uint16_t VRB = constrainVoltage(voltage);
+    dac[0].setVoltage(1, VRB);
 }
 
 void Analyser::setLE(int16_t voltage){
@@ -115,6 +137,11 @@ void Analyser::nudgeDY(int16_t deltaVoltage){
 uint32_t Analyser::getRE(){
     return VRE;
 }
+
+uint32_t getRA();  //Get dac[0] channel A
+
+uint32_t getRB();  //Get dac[0] channel B
+
 uint16_t Analyser::getLE(){
     return VLE;
 }
@@ -145,7 +172,7 @@ uint16_t Analyser::constrainVoltage(int16_t voltage){
     return voltage;
 }
 
-uint32_t Analyser::constrainResidualEnergyVoltage(int32_t voltage){
+uint32_t Analyser::constrainVoltage(int32_t voltage){
     // constrain a residual energy voltage within a valid range
     if(voltage > (4096 * int32_t(fineSteps) - 1)){
         voltage = 4096 * int32_t(fineSteps) - 1;

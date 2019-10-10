@@ -147,8 +147,22 @@ void checkSerial(){
       if(sc.contains("RE", 3)){
         // Get residual energy voltage
         uint32_t tmp = sc.toInt32(5);
-        
+        Serial.println(tmp);
         An->setRE(tmp);
+        sc.sendACK();
+      }
+      if(sc.contains("RA", 3)){
+        // Get residual energy voltage
+        uint32_t tmp = sc.toInt32(5);
+        Serial.println(tmp);
+        An->setRA(tmp);
+        sc.sendACK();
+      }
+      if(sc.contains("RB", 3)){
+        // Get residual energy voltage
+        uint32_t tmp = sc.toInt32(5);
+        Serial.println(tmp);
+        An->setRB(tmp);
         sc.sendACK();
       }
       else if(sc.contains("LE", 3)){
@@ -188,6 +202,14 @@ void checkSerial(){
     }
     else if(sc.contains("GV", 1)){
       if(sc.contains("RE", 3)){
+        // Get residual energy
+        Serial.println(An->getRE());
+      }
+      else if(sc.contains("RA", 3)){
+        // Get residual energy
+        Serial.println(An->getRE());
+      }
+      else if(sc.contains("RB", 3)){
         // Get residual energy
         Serial.println(An->getRE());
       }
@@ -232,10 +254,6 @@ void checkSerial(){
     }
     else if(sc.contains("ID")){
       // Get the ID for this device which is AN for Analyser.
-      Serial.println("AN");
-    }
-    else if(sc.contains("$ID")){
-      // Support for legacy serial port finder that is compatible with Ahmad's serial protocol.
       Serial.println("AN");
     }
     else if(sc.contains("SC1")){
