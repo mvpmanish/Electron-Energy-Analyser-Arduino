@@ -234,6 +234,10 @@ void checkSerial(){
       // Get the ID for this device which is AN for Analyser.
       Serial.println("AN");
     }
+    else if(sc.contains("$ID")){
+      // Support for legacy serial port finder that is compatible with Ahmad's serial protocol.
+      Serial.println("AN");
+    }
     else if(sc.contains("SC1")){
       sc.enableChecksum();
       sc.sendACK();
