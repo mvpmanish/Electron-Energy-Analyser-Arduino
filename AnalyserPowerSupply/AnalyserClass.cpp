@@ -62,8 +62,8 @@ void Analyser::setRE(int32_t voltage){
     Serial.println(VREcoarse);
     Serial.print("Fine: ");
     Serial.println(VREfine);
-    dac[0].setVoltage(0, VREfine);
-    dac[0].setVoltage(1, VREcoarse);
+    dac[0].setVoltage(0, VREcoarse);
+    dac[0].setVoltage(1, VREfine);
 }
 
 void Analyser::setRA(int32_t voltage)
