@@ -29,6 +29,7 @@
 // 3:   0       DX
 // 3:   1       DY
 
+
 Analyser::Analyser(uint8_t n){
     this->n = n;
 }
@@ -58,10 +59,10 @@ void Analyser::setRE(int32_t voltage){
     VRE = constrainVoltage(voltage);
     VREcoarse = voltage / fineSteps;
     VREfine = voltage % fineSteps;
-    Serial.print("Coarse: ");
-    Serial.println(VREcoarse);
-    Serial.print("Fine: ");
-    Serial.println(VREfine);
+    DEBUG_PRINT("Coarse: ");
+    DEBUG_PRINTLN(VREcoarse);
+    DEBUG_PRINT("Fine: ");
+    DEBUG_PRINTLN(VREfine);
     dac[0].setVoltage(0, VREcoarse);
     dac[0].setVoltage(1, VREfine);
 }
@@ -69,16 +70,16 @@ void Analyser::setRE(int32_t voltage){
 void Analyser::setRA(int32_t voltage)
 {
     VREcoarse = constrainVoltage(voltage);
-    Serial.print("Coarse: ");
-    Serial.println(VREcoarse);
+    DEBUG_PRINT("Coarse: ");
+    DEBUG_PRINTLN(VREcoarse);
     dac[0].setVoltage(0, VREcoarse);
 }
 
 void Analyser::setRB(int32_t voltage)
 {
     VREfine = constrainVoltage(voltage);
-    Serial.print("Fine: ");
-    Serial.println(VREfine);
+    DEBUG_PRINT("Fine: ");
+    DEBUG_PRINTLN(VREfine);
     dac[0].setVoltage(1, VREfine);
 }
 
@@ -192,7 +193,7 @@ int32_t Analyser::constrainVoltage(int32_t voltage){
     else if(voltage < 0){
         voltage = 0;
     }
-    Serial.print("Constrained to: ");
-    Serial.println(voltage);
+    DEBUG_PRINT("Constrained to: ");
+    DEBUG_PRINTLN(voltage);
     return voltage;
 }

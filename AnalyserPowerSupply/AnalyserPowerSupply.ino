@@ -3,6 +3,15 @@
 #include "SerialChecker.h"  // Handles serial communications with the controlling PC
 #include "AnalyserClass.h"  // Abstracts away the analysers and handles their DACs
 
+//Uncomment following line to enable debugging serial comments.
+//#define DEBUG
+#ifdef DEBUG
+  #define DEBUG_PRINT(x) Serial.print(x)
+  #define DEBUG_PRINTLN(x)  Serial.println(x)
+#else
+  #define DEBUG_PRINT(x)
+  #define DEBUG_PRINTLN(x)
+#endif
 
 //// Create instances of the two analyser abstraction objects.
 Analyser Analyser1(1);
@@ -147,24 +156,24 @@ void checkSerial(){
       if(sc.contains("RE", 3)){
         // Get residual energy voltage
         uint32_t tmp = sc.toInt32(5);
-        Serial.print("Setting RE to: ");
-        Serial.println(tmp);
+        DEBUG_PRINT("Setting RE to: ");
+        DEBUG_PRINTLN(tmp);
         An->setRE(tmp);
         sc.sendACK();
       }
-      if(sc.contains("RA", 3)){
+      else if(sc.contains("RA", 3)){
         // Get residual energy voltage
-        uint32_t tmp = sc.toInt32(5);
-        Serial.print("Setting A to: ");
-        Serial.println(tmp);
+        uint16_t tmp = sc.toInt16(5);
+        DEBUG_PRINT("Setting A to: ");
+        DEBUG_PRINTLN(tmp);
         An->setRA(tmp);
         sc.sendACK();
       }
-      if(sc.contains("RB", 3)){
+      else if(sc.contains("RB", 3)){
         // Get residual energy voltage
-        uint32_t tmp = sc.toInt32(5);
-        Serial.print("Setting B to: ");
-        Serial.println(tmp);
+        uint16_t tmp = sc.toInt16(5);
+        DEBUG_PRINT("Setting B to: ");
+        DEBUG_PRINTLN(tmp);
         An->setRB(tmp);
         sc.sendACK();
       }
@@ -200,6 +209,7 @@ void checkSerial(){
       }
       else{
         // element not valid.
+        DEBUG_PRINTLN("Sending SV NAK.");
         sc.sendNAK();
       }
     }
@@ -252,6 +262,7 @@ void checkSerial(){
       }
       else{
         // element not valid.
+        DEBUG_PRINTLN("Sending element not recognised NAK.");
         sc.sendNAK();
       }
     }
@@ -270,6 +281,7 @@ void checkSerial(){
     }
     else{
       // Received message not understood.
+      DEBUG_PRINTLN("Sending message not understood NAK.");
       sc.sendNAK();
     }
   }
