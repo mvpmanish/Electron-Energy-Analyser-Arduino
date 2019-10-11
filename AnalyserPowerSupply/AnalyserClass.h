@@ -34,8 +34,8 @@ public:
 
   // Returns the stored set values.
   uint32_t getRE();
-  uint32_t getRA();
-  uint32_t getRB();
+  uint16_t getRA();
+  uint16_t getRB();
   uint16_t getLE();
   uint16_t getAM();
   uint16_t getIH();
@@ -44,14 +44,16 @@ public:
   uint16_t getDY();
 private:
   // These constrain the input voltages to valid values.
-  uint16_t constrainVoltage(int16_t voltage);
-  uint32_t constrainVoltage(int32_t voltage); // overloaded case for the RSE voltage which has more than 2^16 potential steps,
+  int16_t constrainVoltage(int16_t voltage);
+  int32_t constrainVoltage(int32_t voltage); // overloaded case for the RSE voltage which has more than 2^16 potential steps,
   uint8_t n;  //Analyser number
   MCP4822 dac[4];
   const uint8_t firstCSPin = 42; // The four DACs' chip select pins start here and run sequentially
   const uint8_t fineSteps = 100; // The number of fine steps for every coarse step on the RSE voltage
   // Initial values used to set the DACs so that all supplies output 0V to the experiment on startup.
-  uint32_t VRE = 0; 
+  uint32_t VRE = 0;
+  uint16_t VREcoarse = 0;
+  uint16_t VREfine = 0;
   uint16_t VLE = 0;
   uint16_t VDX = 2048;
   uint16_t VDY = 2048;

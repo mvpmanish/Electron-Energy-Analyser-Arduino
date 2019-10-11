@@ -56,9 +56,11 @@ void Analyser::init(){
 
 void Analyser::setRE(int32_t voltage){
     VRE = constrainVoltage(voltage);
-    uint16_t VREcoarse = voltage / fineSteps;
-    uint16_t VREfine = voltage % fineSteps;
+    VREcoarse = voltage / fineSteps;
+    VREfine = voltage % fineSteps;
+    Serial.print("Coarse: ");
     Serial.println(VREcoarse);
+    Serial.print("Fine: ");
     Serial.println(VREfine);
     dac[0].setVoltage(0, VREfine);
     dac[0].setVoltage(1, VREcoarse);
@@ -66,14 +68,18 @@ void Analyser::setRE(int32_t voltage){
 
 void Analyser::setRA(int32_t voltage)
 {
-    uint16_t VRA = constrainVoltage(voltage);
-    dac[0].setVoltage(0, VRA);
+    VREcoarse = constrainVoltage(voltage);
+    Serial.print("Coarse: ");
+    Serial.println(VREcoarse);
+    dac[0].setVoltage(0, VREcoarse);
 }
 
 void Analyser::setRB(int32_t voltage)
 {
-    uint16_t VRB = constrainVoltage(voltage);
-    dac[0].setVoltage(1, VRB);
+    VREfine = constrainVoltage(voltage);
+    Serial.print("Fine: ");
+    Serial.println(VREfine);
+    dac[0].setVoltage(1, VREfine);
 }
 
 void Analyser::setLE(int16_t voltage){
@@ -138,9 +144,15 @@ uint32_t Analyser::getRE(){
     return VRE;
 }
 
-uint32_t getRA();  //Get dac[0] channel A
+uint16_t Analyser::getRA(){
+    //Get dac[0] channel A
+    return VREcoarse;
+}
 
-uint32_t getRB();  //Get dac[0] channel B
+uint16_t Analyser::getRB(){
+    //Get dac[0] channel B
+    return VREfine;
+}
 
 uint16_t Analyser::getLE(){
     return VLE;
@@ -161,7 +173,7 @@ uint16_t Analyser::getDY(){
     return VDY;
 }
 
-uint16_t Analyser::constrainVoltage(int16_t voltage){
+int16_t Analyser::constrainVoltage(int16_t voltage){
     // handles the case where a new voltage is outside of a valid DAC voltage 0 -> 4095.
     if(voltage > 4095){
         voltage = 4095;
@@ -172,7 +184,7 @@ uint16_t Analyser::constrainVoltage(int16_t voltage){
     return voltage;
 }
 
-uint32_t Analyser::constrainVoltage(int32_t voltage){
+int32_t Analyser::constrainVoltage(int32_t voltage){
     // constrain a residual energy voltage within a valid range
     if(voltage > (4096 * int32_t(fineSteps) - 1)){
         voltage = 4096 * int32_t(fineSteps) - 1;
@@ -180,5 +192,7 @@ uint32_t Analyser::constrainVoltage(int32_t voltage){
     else if(voltage < 0){
         voltage = 0;
     }
+    Serial.print("Constrained to: ");
+    Serial.println(voltage);
     return voltage;
 }

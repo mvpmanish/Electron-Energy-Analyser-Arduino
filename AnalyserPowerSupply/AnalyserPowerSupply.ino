@@ -147,6 +147,7 @@ void checkSerial(){
       if(sc.contains("RE", 3)){
         // Get residual energy voltage
         uint32_t tmp = sc.toInt32(5);
+        Serial.print("Setting RE to: ");
         Serial.println(tmp);
         An->setRE(tmp);
         sc.sendACK();
@@ -154,6 +155,7 @@ void checkSerial(){
       if(sc.contains("RA", 3)){
         // Get residual energy voltage
         uint32_t tmp = sc.toInt32(5);
+        Serial.print("Setting A to: ");
         Serial.println(tmp);
         An->setRA(tmp);
         sc.sendACK();
@@ -161,6 +163,7 @@ void checkSerial(){
       if(sc.contains("RB", 3)){
         // Get residual energy voltage
         uint32_t tmp = sc.toInt32(5);
+        Serial.print("Setting B to: ");
         Serial.println(tmp);
         An->setRB(tmp);
         sc.sendACK();
