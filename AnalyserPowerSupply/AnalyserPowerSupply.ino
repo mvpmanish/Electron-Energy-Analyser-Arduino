@@ -2,6 +2,7 @@
 #include "Encoder.h"        // Handles front panel rotary encoders
 #include "SerialChecker.h"  // Handles serial communications with the controlling PC
 #include "AnalyserClass.h"  // Abstracts away the analysers and handles their DACs
+#include "MilliTimer.h"
 
 //Uncomment following line to enable debugging serial comments.
 //#define DEBUG
@@ -23,6 +24,8 @@ const uint8_t fq_ud = 38;
 const uint8_t dataPin = 41;
 const float freq = 14000;
 AD9850 sigGen(w_clk, fq_ud, dataPin);
+MilliTimer sigGenReset(1000);
+
 
 //// Rotary Encoder Settings
 Encoder encs[8];
@@ -82,6 +85,12 @@ void setup(){
 void loop(){
   checkEncoders();
   checkSerial();
+  // Reset the signal generator as it breaks when a high voltage on RSE is set
+  if(sigGenReset.timedOutAndReset())
+  {
+  	sigGen.setfreq(freq);
+  }
+   
 }
 
 
