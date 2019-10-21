@@ -270,6 +270,10 @@ void checkSerial(){
       // Get the ID for this device which is AN for Analyser.
       Serial.println("AN");
     }
+    else if(sc.contains("$ID")){
+        // Get the ID for this device using a compatible leading $ symbol as used in the oldE2E arduinos.
+        Serial.println("AN");
+    }
     else if(sc.contains("SC1")){
       sc.enableChecksum();
       sc.sendACK();

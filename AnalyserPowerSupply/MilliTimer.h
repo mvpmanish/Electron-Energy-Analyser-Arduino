@@ -19,7 +19,7 @@ class MilliTimer
     uint32_t elapsed();// return the elapsed time.
     //bool timedOut();// function to check whether the timer has timed out. If it has, reports true and resets the timer
     bool timedOut(bool RESET = false);
-    bool timedOutAndReset();
+    bool timedOutAndReset(); // equivalent to timedOut(true);
     void updateTimeOut(uint32_t t); //update the timeout variable without restarting the current time
     uint32_t getTimeOut();
     void reset(); // reset the timer.      
