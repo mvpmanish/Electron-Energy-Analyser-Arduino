@@ -26,6 +26,9 @@ const float freq = 14000;
 AD9850 sigGen(w_clk, fq_ud, dataPin);
 MilliTimer sigGenReset(1000);
 
+//Power Pin - HIGH when power supply is turned on
+uint8_t powerPin = 30;
+bool lastPowerState;  //Save of the last power state
 
 //// Rotary Encoder Settings
 Encoder encs[8];
@@ -153,6 +156,11 @@ void checkEncoders(){
 void checkSerial(){
   if(sc.check()){
     Analyser *An = NULL;
+    //Check Arduino pin
+    if(sc.contains("GP"))
+    {
+    	Serial.println(digitalRead(powerPin));
+    }
     if(sc.contains("1")){
       An = &Analyser1;
     }
@@ -294,4 +302,15 @@ void checkSerial(){
       sc.sendNAK();
     }
   }
+}
+
+//Initialise DACs after power turns on
+void initDACs()
+{
+	
+	if(lastPowerState == LOW && digitalRead(powerPin) == HIGH)
+	{
+		
+	}
+	lastPowerState = digitalRead(powerPin);
 }
