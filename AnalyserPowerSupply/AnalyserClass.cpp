@@ -46,6 +46,10 @@ void Analyser::init(){
         }
     }
     // set the voltages to their default values (defined in the header)
+    updateAllDACs();
+}
+
+void Analyser::updateAllDACs(){
     setRE(VRE);
     setLE(VLE);
     setDX(VDX);

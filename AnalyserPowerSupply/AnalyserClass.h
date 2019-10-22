@@ -20,7 +20,7 @@ class Analyser{
 public:
   Analyser(uint8_t n);
   void init();
-  
+  void updateAllDACs();
   // The following commands are used to set the DAC voltages. All have 4096 levels except RSE which uses 
   // two DACs to provide 4096 * 100 steps for finer control.
   void setRE(int32_t voltage);
