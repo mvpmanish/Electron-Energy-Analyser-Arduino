@@ -89,6 +89,7 @@ void loop(){
   checkEncoders();
   checkSerial();
   initDACs();  //If the power turns off then initialise DACs to previous values
+  
   // Reset the signal generator as it breaks when a high voltage on RSE is set
   if(sigGenReset.timedOutAndReset())
   {
